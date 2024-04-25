@@ -23,7 +23,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     //you have to use the same name (webClient) u used in configuaration bean
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuider;
 
     public void placeOrder(OrderRequest orderRequest){
         Order order  = new Order();
@@ -45,8 +45,8 @@ public class OrderService {
         //bodyToMono -: define what is the type of response we are retreiving from inventory service
         // boolean is the type we are retrieving
         // .block() -> to make a asynchronous request
-        InventoryResponse[] inventoryResponseArray = webClient.get()
-                .uri("http://localhost:8082/api/inventory",
+        InventoryResponse[] inventoryResponseArray = webClientBuider.build().get()
+                .uri("http://inventory-service/api/inventory",
                         uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
                         .retrieve()
                                 .bodyToMono(InventoryResponse[].class)
